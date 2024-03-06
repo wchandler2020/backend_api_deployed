@@ -1,0 +1,1 @@
+web: gunicorn jorie_dashboard_backend.wsgi
