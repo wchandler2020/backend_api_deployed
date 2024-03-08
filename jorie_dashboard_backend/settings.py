@@ -62,6 +62,7 @@ THIRD_PARTY_APPS = [
 
 USER_CREATED_APPS = [
     'user.apps.UserConfig',
+    'dashboard.apps.DashboardConfig',
 ]
 
 DJANGO_APPS = [

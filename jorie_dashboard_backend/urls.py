@@ -5,7 +5,7 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/', include('user.urls')),
-    # path('charts-data/', include('charts_data.urls')),
-    path('tinymce/', include('tinymce.urls'))
+    path('api/data', include('dashboard.urls')),
+    path('tinymce/', include('tinymce.urls')),
 ,]
 
