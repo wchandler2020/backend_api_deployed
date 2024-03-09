@@ -4,22 +4,20 @@ from dotenv import load_dotenv
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics, status
-from user.data import Data as client_data
+from .data import Data
 from .tableau_utils import fetch_data
 import concurrent.futures
-
+from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes
 # Create your views here.
-
 class TableauDataView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        data = client_data.get_data(2)
+    @permission_classes([IsAuthenticated])
+    def get(self, client_name):
+        print('client name: ', client_name)
+        obj = Data()
+        data = obj.get_data(client_name)
         data_id_list = data[0]
         chart_data = data[1]
-
-        # Combine data_id_list and chart_data into a single dictionary
-        data_dict = {'data_id_list': data_id_list, 'chart_data': chart_data}
 
         ortho_one_data = []
 
@@ -39,4 +37,4 @@ class TableauDataView(APIView):
             chart_data_results.append(json.loads(fetch_data(chart_id)))
 
         # Return JSON response with ortho_one_data, combined data_id_list, and chart data
-        return Response({'ortho_one_data': ortho_one_data, 'chart_data_results': chart_data_results}, status=status.HTTP_200_OK)
+        return ({'client_data': ortho_one_data, 'chart_data_results': chart_data_results})

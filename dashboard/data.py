@@ -1,5 +1,5 @@
 class Data:
-    def get_data(client_id):
+    def get_data(self, client_name):
         eca_data_cumulative = [
             ['64525a02-344c-4e12-b8fb-6ff54e82ddf6', 'dc861309-f38d-4754-8d9b-442f2b10743f', '214da7f6-eaa9-4e31-8709-83a3831b8e61'],
             ['4d75097a-dc07-4ea3-9e6b-3687eaea4416', '0e00e276-4619-4bdd-98bf-1ba087b84bfa', 'cc969b81-72c5-41c5-b00f-b8af2390946f'],
@@ -51,13 +51,13 @@ class Data:
             '4d4d6829-3d94-4f18-afdb-527ecc8cc32e', '691ac1c5-3ba4-4809-b3e1-c16ed67724c8', '02b1dd75-1173-491e-96fa-0348d324ed46',
         ]
 
-        if client_id == 1:
+        if client_name == "Wagner":
             return (eca_data_cumulative, eca_chart_data)
 
-        elif client_id == 2:
+        elif client_name == 2:
             return (desert_orth_data_cumulative, desert_orth_chart_data)
 
-        elif client_id == 3:
+        elif client_name == 3:
             return (manchester_data, manchester_chart_data)
 
 

@@ -8,6 +8,9 @@ CLIENTS_CHOICES = (
     ("Wagner", "Wagner"),
     ("Desert Ortho", "Desert Ortho"),
     ("Georiga Eye Institute", "Georiga Eye Institute"),
+    ("Eyecare Of Atlanta", "Eyecare Of Atlanta"),
+    ("Manchester", "Manchester")
+
 )
 
 class Client(models.Model):
