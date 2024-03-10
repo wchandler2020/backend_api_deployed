@@ -43,7 +43,7 @@ def getRoutes(request):
         '/api/register/',
         '/api/token/refresh/',
         '/api/token/logout/',
-        '/api/profile-detail/',
+        '/api/profile-detail/y',
         '/api/dashboard/',
     ]
     return Response(routes)
