@@ -114,28 +114,28 @@ WSGI_APPLICATION = "jorie_dashboard_backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': "django.db.backends.mysql",
-#         'NAME': "drf_poc_data",
-#         'USER': "root",
-#         'PASSWORD': "devine11",
-#         'HOST': "localhost",   # Or an IP Address that your DB is hosted on
-#         'PORT': "3306",
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': "django.db.backends.mysql",
+        'NAME': "jorie_users_db",
+        'USER': "root",
+        'PASSWORD': "devine11",
+        'HOST': "localhost",   # Or an IP Address that your DB is hosted on
+        'PORT': "3306",
+    }
+}
 
 # default_db_url = os.environ.get("CLEARDB_DATABASE_URL", "mysql://b32ee8ca76eca1:54ffdb30@us-cluster-east-01.k8s.cleardb.net/heroku_d44ed1cb974d5bd")
 
 # DATABASES = {'default': dj_database_url.config(default=default_db_url)}
 
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'dashboard.db'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'dashboard.db'),
+#     }
+# }
 
 
 # Password validation
@@ -258,4 +258,14 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+AWS_ACCESS_KEY_ID = 'AKIAZTCKTJW354QJCLPH'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'webappbackendapi'
+AWS_S3_SIGNATURE_NAME = 's3v4',
+AWS_S3_REGION_NAME = 'US East (Ohio) us-east-2'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL =  None
+AWS_S3_VERITY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
