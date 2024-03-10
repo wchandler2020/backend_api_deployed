@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-qt#i-5&l6qor87e3%sf_oz9m)&-+hpc5+6f6p)@zclasyz=^sw
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['wchandler60610.pythonanywhere.com', 'localhost', '127.0.0.1', 'localhost:8000']
+ALLOWED_HOSTS = ['wchandler60610.pythonanywhere.com', 'localhost', '127.0.0.1', 'localhost:8000', '18.216.111.17']
 
 AUTH_USER_MODEL = 'user.User'
 
@@ -259,13 +259,5 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-AWS_ACCESS_KEY_ID = 'AKIAZTCKTJW354QJCLPH'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'webappbackendapi'
-AWS_S3_SIGNATURE_NAME = 's3v4',
-AWS_S3_REGION_NAME = 'US East (Ohio) us-east-2'
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL =  None
-AWS_S3_VERITY = True
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 
