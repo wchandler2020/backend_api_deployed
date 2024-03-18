@@ -9,6 +9,12 @@ urlpatterns = [
     path('profile-detail/', ProfileDetailView.as_view(), name='profile-detail'),
     path('tableau-data/', TableauDataView.as_view(), name='tableau_data'),
     path('dashboard/', dashboard),
+    path('hasotp/', HasOTPView.as_view(), name='hasotp'),
+    path('otp/', OTPView.as_view(), name='otp'),
+    path('otp/<str:token>/', TOTPVerifyView.as_view(), name='otp'),
+    path('verified/', VerifiedView.as_view(), name='verify'),
     path('', getRoutes),
 ]
+
+
 

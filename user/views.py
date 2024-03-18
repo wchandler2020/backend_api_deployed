@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from django.shortcuts import render
+from .otp import get_user_totp_device, login_user, is_verified, IsVerified
 from user.models import User, Profile
 from .tableau_utils import fetch_data
 from .serializer import (
@@ -23,11 +24,14 @@ import json
 import concurrent.futures
 import re
 from .data import Data
-from dashboard.views import TableauDataView
+# from dashboard.views import TableauDataView
 
 load_dotenv()  # take environment variables from .env.
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+    def get_token(cls, user):
+        token = super().get_token(user)
+        
 
 
 class RegisterView(generics.CreateAPIView):
@@ -43,8 +47,9 @@ def getRoutes(request):
         '/api/register/',
         '/api/token/refresh/',
         '/api/token/logout/',
-        '/api/profile-detail/y',
+        '/api/profile-detail/',
         '/api/dashboard/',
+        '/api/otp/',
     ]
     return Response(routes)
 
@@ -57,13 +62,8 @@ def dashboard(request):
         user_serializer = UserSerializer(request.user)
         user_data = user_serializer.data
         response = f'Hi {user_data["username"]} welcome back'
-        #print(user_data)
-        # client_name = user_data["client_name"]
-        # obj = TableauDataView()
-        # client_data = obj.get(client_name)
-        # Include all fields from UserSerializer in the response
         context = {'user': user_data,'response': response, **user_data}
-        
+
         return Response(context, status=status.HTTP_200_OK)
     elif request.method == 'POST':
         text = request.data.get('text')
@@ -89,6 +89,58 @@ class ProfileDetailView(APIView):
             # Handle other exceptions
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class HasOTPView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        user = request.user
+        device = get_user_totp_device( user)
+        if not device:
+            return Response(False, status=status.HTTP_200_OK)
+        elif device.confirmed == False:
+            return Response(False, status=status.HTTP_200_OK)
+        return Response(False, status=status.HTTP_200_OK)
+
+class VerifiedView(APIView):
+    permission_classes = [IsAuthenticated, IsVerified]
+
+    def get (self, request):
+        verified=  is_verified(request)
+        if verified:
+            return Response(True, status=status.HTTP_200_OK)
+        return Response(False, status=status.HTTP_200_OK) 
+
+class OTPView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, format=None):
+        user = request.user
+        device = get_user_totp_device( user)
+        if not device:
+            device = user.totpdevice_set.create(confirmed=False)
+        url = device.config_url
+        return Response(url, status=status.HTTP_201_CREATED)
+
+
+
+class TOTPVerifyView(APIView):
+    permission_classes = (IsAuthenticated,)
+    """
+    Use this endpoint to verify/enable a TOTP device
+    """
+    
+
+    def post(self, request, token, format=None):
+        user = request.user
+        device = get_user_totp_device( user)
+        if not device == None and device.verify_token(token):
+            if not device.confirmed:
+                device.confirmed = True
+                device.save()
+            login_user(request,device)
+            return Response(True, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -98,10 +150,11 @@ class LogoutView(APIView):
             refresh_token = request.data.get("refresh_token")
             token = RefreshToken(refresh_token)
             token.blacklist()
+            request.session.flush()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except TokenError as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
+
 
 class TableauDataView(APIView):
     permission_classes = [IsAuthenticated]
@@ -114,7 +167,7 @@ class TableauDataView(APIView):
         data = client.get_data(client_name)
         data_id_list = data[0]
         chart_data = data[1]
-        
+
         client_data = []
 
         # Using ThreadPoolExecutor to fetch data concurrently for data_id_list
@@ -125,7 +178,7 @@ class TableauDataView(APIView):
         for i, row in enumerate(data_id_list):
             dict_row = {f"item_{j + 1}": json.loads(results.pop(0)) for j in range(len(row))}
             client_data.append(dict_row)
-        
+
         # Fetch data for chart_data
         chart_data_results = []
         for chart_id in chart_data:
@@ -134,12 +187,3 @@ class TableauDataView(APIView):
 
         # Return JSON response with ortho_one_data, combined data_id_list, and chart data
         return Response({'client_data': client_data, 'chart_data_results': chart_data_results}, status=status.HTTP_200_OK)
-
-    
-    
-
-
-    
-
-
-
