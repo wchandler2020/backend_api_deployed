@@ -32,7 +32,7 @@ class User(AbstractUser):
     client = models.ForeignKey(Client, null=True, on_delete=models.RESTRICT)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-
+    last_verified_session = models.CharField(max_length=500, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 

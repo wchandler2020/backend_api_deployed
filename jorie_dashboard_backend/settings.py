@@ -38,15 +38,13 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 ## These are the allowed hosts
-CORS_ALLOWED_HEADERS = [
+CORS_ALLOW_HEADERS = [
     *default_headers,
-    'accept',
     'accept-encoding',
-    'authorization',
-    'content-type',
     'origin',
-    'x-requested-with',
-    "application/json",
+    'unique-id',
+    
+
     # Add more headers as needed
 ]
 

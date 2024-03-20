@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from django.shortcuts import render
-from .otp import get_user_totp_device, login_user, is_verified, IsVerified
+from .otp import get_user_totp_device, login_user, is_verified, IsVerified, get_client_ip
 from user.models import User, Profile
 from .tableau_utils import fetch_data
 from .serializer import (
@@ -133,6 +133,9 @@ class TOTPVerifyView(APIView):
     def post(self, request, token, format=None):
         user = request.user
         device = get_user_totp_device( user)
+        print(get_client_ip(request))
+        print(
+        request.headers['unique-id'])
         if not device == None and device.verify_token(token):
             if not device.confirmed:
                 device.confirmed = True
